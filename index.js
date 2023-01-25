@@ -7,6 +7,9 @@ function form(formId, obj, preventDefault = true) {
         let arg = obj
         f.querySelectorAll('input').forEach(e => {
             switch (e.type) {
+                case "text":
+                    arg[e.attributes.formvalue] = e.value
+                    break
                 case "checkbox":
                     arg[e.attributes.formvalue] = e.checked
                     break
@@ -33,8 +36,8 @@ function form(formId, obj, preventDefault = true) {
     let numRadioInputs = 0
 
     Object.entries(obj).forEach(([k, v]) => {
+        let container = document.createElement('span')
         let child = document.createElement('input')
-        console.log(typeof v)
         switch (typeof v) {
             case "string":
                 child.setAttribute("type", "text")
@@ -48,7 +51,6 @@ function form(formId, obj, preventDefault = true) {
                 child.checked = v
                 break
             case "object":
-                console.log(v.type)
                 switch (v.type) {
                     case "number":
                     case "range":
@@ -57,19 +59,34 @@ function form(formId, obj, preventDefault = true) {
                     case "radio":
                         child = document.createElement('span')
                         child.type = "radio-container"
+
                         v.options.forEach((option, i) => {
                             const subChild = document.createElement("input")
                             if (i == 0) {
-                                subChild.checked="checked"
+                                subChild.checked = "checked"
                             }
+                            const subContainer = document.createElement('span')
+                            const styleContainer = document.createElement('span')
+                            styleContainer.classList.add("container")
+                            const checkmarkProxy = document.createElement('span')
+                            checkmarkProxy.classList.add("checkmark")
+                            const label = document.createElement('label')
+                            label.setAttribute("for", option)
+                            label.textContent = option
+
                             subChild.type = "radio"
-                            subChild.name = formId + numRadioInputs
+                            subChild.name = `${formId}-${numRadioInputs}`
+                            subChild.id = `${subChild.name}-${option}`
                             subChild.value = option
                             subChild.attributes.formvalue = k
-                            child.appendChild(subChild)
-                            
+
+                            subContainer.appendChild(label)
+                            styleContainer.appendChild(subChild)
+                            styleContainer.appendChild(checkmarkProxy)
+                            subContainer.appendChild(styleContainer)
+                            child.appendChild(subContainer)
                         })
-                        numRadioInputs ++
+                        numRadioInputs++
                         break
                 }
 
@@ -77,7 +94,12 @@ function form(formId, obj, preventDefault = true) {
         }
         child.attributes.formvalue = k
         child.oninput = change
-        f.appendChild(child)
+        const label = document.createElement('label')
+        label.setAttribute("for", k)
+        label.textContent = k
+        container.appendChild(label)
+        container.appendChild(child)
+        f.appendChild(container)
     })
     return {
         onChange: callback
@@ -102,10 +124,10 @@ function number(min, max, val = min / max) {
     }
 }
 
-function radio(options, useIndex=false) {
-    const ret = {options: []}
-    options.forEach((option, i) => {
-        ret.options.push(useIndex ? i : option)
+function radio(options) {
+    const ret = { options: [] }
+    options.forEach(option => {
+        ret.options.push(option)
     })
     ret["type"] = "radio"
     return ret
