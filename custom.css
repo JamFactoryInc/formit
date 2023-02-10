@@ -1,14 +1,22 @@
-input {
-    padding: 0.5em;
-    font-size: 100%;
-    color: #EEE;
-    border-radius: 0.25em;
+:root {
+    --primary: #EEE;
+    --secondary: #45F;
+    --text: #111;
+    --hover:#BBB;
 }
 
 input {
-    outline: rgb(255, 77, 121) solid 2px;
+    padding: 0.5em;
+    font-size: 100%;
+    color: var(--text);
+    border-radius: 0.25em;
+    outline: var(--secondary) solid 2px;
     border: none;
-    background-color: #111;
+    background-color: var(--primary);
+}
+
+input:focus {
+    box-shadow: #0008 0px 0px 0.5rem;
 }
 
 
@@ -17,8 +25,9 @@ input {
 input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
-    height: 25px;
-    background: #111;
+    height: 0.5rem;
+    padding: 0;
+    background: var(--primary);
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
@@ -39,26 +48,28 @@ input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     /* Override default look */
     appearance: none;
-    width: 25px;
+    width: 1.5rem;
     /* Set a specific slider handle width */
-    height: 25px;
+    height: 1.5rem;
     /* Slider handle height */
-    background: rgb(255, 77, 121);
+    background: var(--secondary);
     /* Green background */
     cursor: pointer;
+    border-radius: 1rem;
     /* Cursor on hover */
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 25px;
+    width: 1.5rem;
     /* Set a specific slider handle width */
-    height: 25px;
+    height: 1.5rem;
     /* Slider handle height */
-    background: rgb(255, 77, 121);
+    background: var(--secondary);
     /* Green background */
     cursor: pointer;
     /* Cursor on hover */
     border: none;
+    border-radius: 1rem;
 }
 
 
@@ -83,13 +94,13 @@ input[type="range"]::-moz-range-thumb {
     opacity: 0;
 }
 
-.checkmark {
+.radio {
     position: absolute;
     top: 0;
     left: 0;
     height: 1em;
     width: 1em;
-    background-color: #111;
+    background-color: var(--primary);
     border-radius: 50%;
     z-index: -1;
 }
@@ -97,21 +108,21 @@ input[type="range"]::-moz-range-thumb {
 
 /* On mouse-over, add a grey background color */
 
-.container:hover input~.checkmark {
-    background-color: #666;
+.container:hover input~.radio {
+    background-color: var(--hover);
 }
 
 
 /* When the radio button is checked, add a blue background */
 
-.container input:checked~.checkmark {
-    background-color: rgb(255, 77, 121);
+.container input:checked~.radio {
+    background-color: var(--secondary);
 }
 
 
 /* Create the indicator (the dot/circle - hidden when not checked) */
 
-.checkmark:after {
+.radio:after {
     content: "";
     position: absolute;
     display: none;
@@ -120,18 +131,82 @@ input[type="range"]::-moz-range-thumb {
 
 /* Show the indicator (dot/circle) when checked */
 
-.container input:checked~.checkmark:after {
+.container input:checked~.radio:after {
     display: block;
 }
 
 
 /* Style the indicator (dot/circle) */
 
-.container .checkmark:after {
+.container .radio:after {
     top: 0.25em;
     left: 0.25em;
     width: 0.5em;
     height: 0.5em;
     border-radius: 50%;
-    background: hsl(345, 100%, 20%);
+    background: var(--primary);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* checkbox */
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1em;
+    width: 1em;
+    background-color: var(--primary);
+    z-index: -1;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: var(--hover);
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: var(--secondary);
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    top: 0.15em;
+    left: 0.35em;
+    width: 0.2em;
+    height: 0.4em;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
