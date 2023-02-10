@@ -12,7 +12,7 @@ const formContainer = document.findElementById("form-container");
 
 // create and append the form to formContainer
 formContainer.appendChild(form(
-    // dive an ID for the form to use
+    // provide an ID for the form to use
     "test-form",
     // form data
     {
