@@ -56,12 +56,12 @@ form(
         
         // Note: due to stateless nature of buttons, they are not included in the returned onUpdate info
         // When buttons are pressed, the main callback function is still invoked
-        test7: () => { console.log("button press") } // creates a button with the onClick function as defined
-        test8: (formData, name, element, form) => { console.log(name); } // the onUpdate info, button text name, button element, and form element are all passed into the callback function
+        test7: () => { console.log("button press") }, // creates a button with the onClick function as defined
+        test8: (formData, name, element, form) => { console.log(name); }, // the onUpdate info, button text name, button element, and form element are all passed into the callback function
 
-        "Name with spaces or %special chars%": true // remember you can define strings as object keys if you want input labels/text that are not legal JS syntax
+        "Name with spaces or %special chars%": true, // remember you can define strings as object keys if you want input labels/text that are not legal JS syntax
         
-        test9: textArea("placeholder text", rows=10, cols=15, resize=true) // creates a textarea with the given parameters
+        test9: textArea("placeholder text", rows=10, cols=15, resize=true), // creates a textarea with the given parameters
     }
 )
 ```
