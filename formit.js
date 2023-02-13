@@ -62,8 +62,19 @@ function form(formId, obj, preventDefault = true) {
                 child.setAttribute("type", "number")
                 break
             case "boolean":
-                child.setAttribute("type", "checkbox")
-                child.checked = v
+                child = document.createElement('span')
+                child.type = "checkmark-container"
+                const subChild = document.createElement("input")
+                subChild.attributes.formvalue = k
+                const styleContainer = document.createElement('span')
+                styleContainer.classList.add("container")
+                const checkmarkProxy = document.createElement('span')
+                checkmarkProxy.classList.add("checkmark")//checkmark
+                subChild.type = "checkbox"
+                subChild.checked = v
+                styleContainer.appendChild(subChild)
+                styleContainer.appendChild(checkmarkProxy)
+                child.appendChild(styleContainer)
                 break
             case "object":
                 switch (v.type) {
