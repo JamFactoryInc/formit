@@ -69,5 +69,6 @@ form(
 
 ## Notes
 
-This repo also contains a style sheet to override the default input element styles (allowing custom checkboxes, radio buttons, etc.)
-and includes default formatting for the form to fit whatever container it is in
+This repo also contains two style sheets:
+ - layout.min.css : a style sheet to improve the default layout of a form, making it fill its container
+ - custom.min.css : a style sheet that replaces the unmodifiable default look of input elements with custom styles
