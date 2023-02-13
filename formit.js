@@ -48,6 +48,37 @@ function form(formId, obj, preventDefault = true) {
         return f
     }
 
+    function subChild(element, newElementType, callback) {
+        const newChild = document.createElement(newElementType)
+        callback(newChild)
+        element.appendChild(newChild)
+    }
+
+    function handleGroupElement(child, option, i, k, proxyClass, inputType) {
+        subChild(child, "span", sChild1 => {
+            subChild(sChild1, "label", label => {
+                label.setAttribute("for", option)
+                label.textContent = option
+            })
+            subChild(sChild1, "span", styleContainer => {
+                styleContainer.classList.add("container")
+                subChild(styleContainer, "input", (checkbox) => {
+                    if (i == 0) {
+                        checkbox.checked = "checked"//checked
+                    }
+                    checkbox.type = inputType
+                    checkbox.name = `${formId}-${numRadioInputs}`
+                    checkbox.id = `${checkbox.name}-${option}`
+                    checkbox.value = option
+                    checkbox.attributes.formvalue = k
+                })
+                subChild(styleContainer, "span", proxy => {
+                    proxy.classList.add(proxyClass)
+                })
+            })
+        })
+    }
+
     let numRadioInputs = 0
 
     Object.entries(obj).forEach(([k, v]) => {
@@ -64,17 +95,17 @@ function form(formId, obj, preventDefault = true) {
             case "boolean":
                 child = document.createElement('span')
                 child.type = "checkmark-container"
-                const subChild = document.createElement("input")
-                subChild.attributes.formvalue = k
-                const styleContainer = document.createElement('span')
-                styleContainer.classList.add("container")
-                const checkmarkProxy = document.createElement('span')
-                checkmarkProxy.classList.add("checkmark")//checkmark
-                subChild.type = "checkbox"
-                subChild.checked = v
-                styleContainer.appendChild(subChild)
-                styleContainer.appendChild(checkmarkProxy)
-                child.appendChild(styleContainer)
+                subChild(child, "span", styleContainer => {
+                    styleContainer.classList.add("container")
+                    subChild(styleContainer, "input", realInput => {
+                        realInput.attributes.formvalue = k
+                        realInput.type = "checkbox"
+                        realInput.checked = v
+                    })
+                    subChild(styleContainer, "span", proxy => {
+                        proxy.classList.add("checkmark")
+                    })
+                })
                 break
             case "object":
                 switch (v.type) {
@@ -87,30 +118,7 @@ function form(formId, obj, preventDefault = true) {
                         child.type = "radio-container"
 
                         v.options.forEach((option, i) => {
-                            const subChild = document.createElement("input")
-                            if (i == 0) {
-                                subChild.checked = "checked"//checked
-                            }
-                            const subContainer = document.createElement('span')
-                            const styleContainer = document.createElement('span')
-                            styleContainer.classList.add("container")
-                            const checkmarkProxy = document.createElement('span')
-                            checkmarkProxy.classList.add("radio")//checkmark
-                            const label = document.createElement('label')
-                            label.setAttribute("for", option)
-                            label.textContent = option
-
-                            subChild.type = "radio"
-                            subChild.name = `${formId}-${numRadioInputs}`
-                            subChild.id = `${subChild.name}-${option}`
-                            subChild.value = option
-                            subChild.attributes.formvalue = k
-
-                            subContainer.appendChild(label)
-                            styleContainer.appendChild(subChild)
-                            styleContainer.appendChild(checkmarkProxy)
-                            subContainer.appendChild(styleContainer)
-                            child.appendChild(subContainer)
+                            handleGroupElement(child, option, i, k, "radio", "radio")
                         })
                         numRadioInputs++
                         break
@@ -119,43 +127,19 @@ function form(formId, obj, preventDefault = true) {
                         child.type = "checkmark-container"
 
                         v.options.forEach((option, i) => {
-                            const subChild = document.createElement("input")
-                            if (i == 0) {
-                                subChild.checked = "checked"//checked
-                            }
-                            const subContainer = document.createElement('span')
-                            const styleContainer = document.createElement('span')
-                            styleContainer.classList.add("container")
-                            const checkmarkProxy = document.createElement('span')
-                            checkmarkProxy.classList.add("checkmark")//checkmark
-                            const label = document.createElement('label')
-                            label.setAttribute("for", option)
-                            label.textContent = option
-
-                            subChild.type = "checkbox"
-                            subChild.name = `${formId}-${numRadioInputs}`
-                            subChild.id = `${subChild.name}-${option}`
-                            subChild.value = option
-                            subChild.attributes.formvalue = k
-
-                            subContainer.appendChild(label)
-                            styleContainer.appendChild(subChild)
-                            styleContainer.appendChild(checkmarkProxy)
-                            subContainer.appendChild(styleContainer)
-                            child.appendChild(subContainer)
+                            handleGroupElement(child, option, i, k, "checkmark", "checkbox")
                         })
                         numRadioInputs++
                         break
                 }
-
                 break
         }
         child.attributes.formvalue = k
         child.oninput = change
-        const label = document.createElement('label')
-        label.setAttribute("for", k)
-        label.textContent = k
-        container.appendChild(label)
+        subChild(container, "label", label => {
+            label.setAttribute("for", k)
+            label.textContent = k
+        })
         container.appendChild(child)
         f.appendChild(container)
     })
