@@ -1,11 +1,13 @@
 # formit
-Vanilla Javascript utility to make forms less of a pain in the ass
+Easy-to-use but configurable JavaScript plugin to make creating and reading forms less of a pain in the ass
 
-## Features
-- create a form from a basic JS object
-- register a callback function to the form that receives all the parsed for data on input
+## Overview
+### Features
+- easily generate a form from a basic JavaScript primitives
+- or fine-tune your form with included functions like `slider`, `radio`, and `textArea`
+- register a callback function to the form that receives all the parsed for data on update
 
-## How to use
+### Basic example
 ```javascript
 // get some element to put the form in
 const formContainer = document.findElementById("form-container");
@@ -25,8 +27,6 @@ formContainer.appendChild(form(
     console.log(data.slider);
 })
 ```
-
-Simple as that!
 
 ## Docs
 Most JavaScript Primitives are supported by formit's `form` function. Below is an example for the main primitive types
