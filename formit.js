@@ -1,37 +1,48 @@
+function transform(callbacks, key, value) {
+    if (callbacks[key + '-transform']) {
+        return callbacks[key + '-transform'](value, key)
+    }
+    return value
+}
+
+
 function form(formId, obj, preventDefault = true) {
     const callbacks = {}
     const f = document.createElement('form')
     f.id = formId
 
     function change() {
+        let anyFail = 0
         let arg = obj
         f.querySelectorAll('input').forEach(e => {
+            const key = e.attributes.formvalue
+            let ignoreCallbacks = false
             switch (e.type) {
                 case "text":
-                    arg[e.attributes.formvalue] = e.value
+                    arg[key] = transform(callbacks, key, e.value)
                     break
                 case "checkbox":
-                    if (typeof arg[e.attributes.formvalue] === 'boolean') {
-                        arg[e.attributes.formvalue] = e.checked
+                    if (typeof arg[key] === 'boolean') {
+                        arg[key] = transform(callbacks, key, e.checked)
                     } else {
-                        if (!arg[e.attributes.formvalue].first) {
-                            arg[e.attributes.formvalue].first = true
-                            arg[e.attributes.formvalue].results = []
+                        if (!arg[key].first) {
+                            arg[key].first = true
+                            arg[key].results = []
                         }
                         if (e.checked) {
-                            arg[e.attributes.formvalue].results.push(e.value)
+                            arg[key].results.push(e.value)
                         }
                     }
                     break
                 case "range":
-                    arg[e.attributes.formvalue] = parseInt(e.value)
+                    arg[key] = transform(callbacks, key, parseInt(e.value))
                     break
                 case "number":
-                    arg[e.attributes.formvalue] = parseFloat(e.value)
+                    arg[key] = transform(callbacks, key, parseFloat(e.value))
                     break
                 case "radio":
                     if (e.checked) {
-                        arg[e.attributes.formvalue] = e.value
+                        arg[key] = transform(callbacks, key, e.value)
                     }
             }
         })
@@ -40,7 +51,9 @@ function form(formId, obj, preventDefault = true) {
                 arg[k] = v.results
             }
         })
-        callbacks[formId](arg)
+        if (anyFail === 0) {
+            callbacks[formId](arg)
+        }
     }
 
     function callback(fn) {
@@ -48,9 +61,9 @@ function form(formId, obj, preventDefault = true) {
         return f
     }
 
-    function subChild(element, newElementType, callback) {
+    function subChild(element, newElementType, cb) {
         const newChild = document.createElement(newElementType)
-        callback(newChild)
+        cb(newChild)
         element.appendChild(newChild)
     }
 
@@ -84,6 +97,20 @@ function form(formId, obj, preventDefault = true) {
     Object.entries(obj).forEach(([k, v]) => {
         let container = document.createElement('span')
         let child = document.createElement('input')
+        // handle configured elements
+        if (v.config) {
+            if (v.config.validate) {
+                callbacks[k + "-validate"] = v.config.validate
+            }
+            if (v.config.transform) {
+                callbacks[k + "-transform"] = v.config.transform
+            }
+            if (v.config.lock) {
+                callbacks[k + "-lock"] = v.config.lock
+            }
+            v = v.value
+        }
+        // turn into normal element
         switch (typeof v) {
             case "string":
                 child.setAttribute("type", "text")
@@ -94,6 +121,7 @@ function form(formId, obj, preventDefault = true) {
                 break
             case "boolean":
                 child = document.createElement('span')
+                child.classList.add("single-checkbox")
                 child.type = "checkmark-container"
                 subChild(child, "span", styleContainer => {
                     styleContainer.classList.add("container")
@@ -185,19 +213,24 @@ function checkmark(options) {
 }
 
 addEventListener('DOMContentLoaded', () => {
-    document.querySelector('body').appendChild(
+    document.querySelector('#formcontainer').appendChild(
         form("formit", {
             one: 1,
             two: "Test",
-            three: false,
+            "Custom name with %": false,
             four: slider(0, 10),
             five: radio(["one", "two", "three"]),
             six: checkmark(["four", "five", "six"])
         }).onChange((data) => console.log(data))
     )
-    document.querySelector('body').appendChild(
-        form("formit", {
-            one: 1,
-        }).onChange((data) => console.log(data))
-    )
+    // document.querySelector('body').appendChild(
+    //     form("formit", {
+    //         one: {
+    //             value: 1,
+    //             config: {
+    //                 transform: (v) => v*2
+    //             }
+    //         },
+    //     }).onChange((data) => console.log(data))
+    // )
 });

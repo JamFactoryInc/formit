@@ -1,22 +1,35 @@
 form {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
 }
 
+
 form>* {
-    margin: 1em;
-    margin: 1em;
+    margin: 1rem;
+    
+    min-width: 15rem;
+    max-width: 3in;
+    
+    flex-basis: content;
+    flex-grow: 1;
+}
+
+@media screen and (orientation:portrait) {
+    form>* {
+        min-width: 80%;
+        max-width: 100%;
+    }
 }
 
 form label {
-    width: 25%;
+    width: 1in;
     display: flex;
     align-items: center;
 }
 
 form label+* {
-    width: 50%;
+    width: 60%;
 }
 
 form span {
@@ -28,4 +41,8 @@ form span {
 form>span>span {
     display: flex;
     flex-direction: column;
+}
+
+input[type="range"] {
+    align-self: center;
 }

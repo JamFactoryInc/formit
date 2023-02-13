@@ -10,4 +10,5 @@ body {background-color: black;}
 
 .container *, input[type="range"] {
     outline: 1px solid var(--secondary);
+    outline-offset: -1px;
 }
