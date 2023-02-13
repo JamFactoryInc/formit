@@ -2,10 +2,15 @@
 Easy-to-use but configurable JavaScript plugin to make creating and reading forms less of a pain in the ass
 
 ## Overview
+### Purpose
+This plugin was primarily built for simple static webpages that take form data -- calculators, generators, surveys, etc. -- to make the process of quickly adding, validating, and parsing inputs easy
 ### Features
 - easily generate a form from a basic JavaScript primitives
 - or fine-tune your form with included functions like `slider`, `radio`, and `textArea`
-- register a callback function to the form that receives all the parsed for data on update
+- add input-specific or form-wide validation
+- add hide & lock conditions to prevent malformed data
+- add input transformers to change the input before it is passed to a 
+- register a callback function to the form that receives all the parsed for data on update (assuming inputs are valid)
 - A11y-compliant
 
 ### Basic example
