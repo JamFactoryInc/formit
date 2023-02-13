@@ -6,6 +6,7 @@ Easy-to-use but configurable JavaScript plugin to make creating and reading form
 - easily generate a form from a basic JavaScript primitives
 - or fine-tune your form with included functions like `slider`, `radio`, and `textArea`
 - register a callback function to the form that receives all the parsed for data on update
+- A11y-compliant
 
 ### Basic example
 ```javascript
