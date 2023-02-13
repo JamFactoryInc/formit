@@ -1,0 +1,13 @@
+:root {
+    --primary: #111;
+    --text: #EEE;
+    --secondary: #67F;
+    --hover:#333;
+    --glow: #FFF;
+}
+
+body {background-color: black;}
+
+.container *, input[type="range"] {
+    outline: 1px solid var(--secondary);
+}

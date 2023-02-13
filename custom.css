@@ -3,6 +3,7 @@
     --secondary: #45F;
     --text: #111;
     --hover:#BBB;
+    --glow: #000;
 }
 
 input {
@@ -15,8 +16,8 @@ input {
     background-color: var(--primary);
 }
 
-input:focus {
-    box-shadow: #0008 0px 0px 0.5rem;
+input:focus, input:focus + span {
+    box-shadow: var(--glow) 0px 0px 0.75rem;
 }
 
 
