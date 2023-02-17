@@ -8,7 +8,6 @@ function transform(callbacks, key, value) {
 function validate(callbacks, key, arg, fid) {
     if (callbacks[key + '-validate']) {
         const validationResult = callbacks[key + '-validate'](arg[key], arg, key)
-        console.log(key, validationResult)
         if (validationResult === undefined) return 0
         if (validationResult === false || typeof validationResult === "string") {
             inputValidationFailure(key, fid, validationResult)
@@ -39,13 +38,18 @@ function form(formId, obj, preventDefault = true) {
 
     // run on form change
     // passes a modified input config object to the registered callback function
-    function change() {
+    function change(ctx, ctxCallback) {
+
         let anyFail = 0
         let arg = obj
         // get all input elements in our form
         f.querySelectorAll('input').forEach(e => {
             // the given input id
             const key = e.attributes.formvalue
+            // remove buttons from result
+            if (typeof arg[key] === "function") {
+                return
+            }
             let ignoreCallbacks = false
             // do logic based on the input type
             // handle configured elements
@@ -58,13 +62,10 @@ function form(formId, obj, preventDefault = true) {
                     break
                 case "checkbox":
                     // discern if this is a single or multi checkbox by checking the input config value
-                    console.log(arg[key])
                     if (typeof arg[key] === 'boolean') {
                         // single
-                        console.log("single")
                         arg[key] = transform(callbacks, key, e.checked)
                     } else {
-                        console.log("multi")
                         // multi
 
                         // init the list of results
@@ -98,9 +99,13 @@ function form(formId, obj, preventDefault = true) {
             }
             anyFail += validate(callbacks, key, arg, formId)
         })
+
         // only do callback if there were no validation errors
-        console.log(anyFail)
         if (anyFail === 0) {
+            if (ctx === "button") {
+                ctxCallback(arg)
+                return
+            }
             callbacks[formId](arg)
         }
     }
@@ -171,6 +176,10 @@ function form(formId, obj, preventDefault = true) {
         }
         // based on config input, create elements
         switch (typeof v) {
+            case "function":
+                child.type = "button"
+                child.onclick = () => change("button", v)
+                break
             case "string":
                 child.setAttribute("type", "text")
                 child.setAttribute("placeholder", v)
@@ -293,7 +302,7 @@ function checkmark(options) {
 addEventListener('DOMContentLoaded', () => {
     document.querySelector('#formcontainer').appendChild(
         form("formit", {
-            one: 1,
+            one: (v) => {console.log(v.two)},
             two: {
                 value: "Test",
                 config: {
