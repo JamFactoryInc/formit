@@ -13,6 +13,9 @@ form>* {
     
     flex-basis: content;
     flex-grow: 1;
+
+    display: block;
+    position: relative;
 }
 
 @media screen and (orientation:portrait) {
@@ -41,6 +44,7 @@ form span {
 form>span>span {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 input[type="range"] {

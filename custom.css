@@ -13,7 +13,8 @@ form label {
     color: var(--text);
 }
 
-input {
+input,
+.form-message{
     padding: 0.5em;
     font-size: 100%;
     color: var(--text);
@@ -24,8 +25,36 @@ input {
     background-color: var(--primary);
 }
 
+input.validation-fail {
+    outline-color: var(--invalid);
+}
+
+.form-message {
+    outline-color: var(--invalid);
+    position: absolute;
+    top:1.3em;
+    width: 100%;
+    color: var(--invalid);
+}
+
+.form-message::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top:-0.25em;
+    width: 0.5em;
+    height: 0.5em;
+    margin-left: 65%;
+    background-color: var(--primary);
+    border: solid var(--invalid);
+    border-width: 2px 0 0 2px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
 input:focus, input:focus + span {
-    box-shadow: var(--glow) 0px 0px 0.25rem;
+    box-shadow: var(--glow) 0 0 0.25rem;
 }
 
 
@@ -68,6 +97,10 @@ input[type="range"]::-webkit-slider-thumb {
     /* Cursor on hover */
 }
 
+input[type="range"]::-webkit-slider-thumb.validation-fail {
+    background: var(--invalid);
+}
+
 input[type="range"]::-moz-range-thumb {
     width: 1.5em;
     /* Set a specific slider handle width */
@@ -79,6 +112,10 @@ input[type="range"]::-moz-range-thumb {
     /* Cursor on hover */
     border: none;
     border-radius: 1em;
+}
+
+input[type="range"]::-moz-range-thumb.validation-fail {
+    background: var(--invalid);
 }
 
 
@@ -129,6 +166,9 @@ input[type="range"]::-moz-range-thumb {
     background-color: var(--secondary);
 }
 
+.validation-fail .radio {
+    background-color: var(--invalid);
+}
 
 /* Create the indicator (the dot/circle - hidden when not checked) */
 
@@ -184,6 +224,10 @@ input[type="range"]::-moz-range-thumb {
   .container input:checked ~ .checkmark {
     background-color: var(--secondary);
   }
+
+.validation-fail .checkmark {
+    outline-color: var(--invalid);
+}
   
   /* Create the checkmark/indicator (hidden when not checked) */
   .checkmark:after {
